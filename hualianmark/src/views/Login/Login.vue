@@ -43,25 +43,20 @@ export default {
                 callback(new Error("密码长度 3 - 6 位"));
             } else{
                 if (this.loginform.checkpwd !== "") {
-                    // 如果确认密码不为空
-                    this.$refs.loginform.validateField("checkpwd"); // 调用确认密码的验证（一致性验证）
+                    this.$refs.loginform.validateField("checkpwd");
                 }
-                // 成功的回调
                 callback();
             }
         };
 
         // 确认密码的验证函数
         let checkPass = (rule, value, callback) => {
-            // rule是传入的验证规则  value是用户输入的值 callback是一个回调函数
             if (value === "") {
-                // 如果等于空
-                callback(new Error("请再次输入密码")); // 输出提示
+                callback(new Error("请再次输入密码"));
             } else if (value !== this.loginform.pwd) {
-                // 如果确认密码 和 密码不同
                 callback(new Error("两次输入密码不一致"));
             }
-            // 如果直接调用 不传入任何错误信息 就是成功 绿色的勾勾
+
             callback();
         };
         return {
@@ -89,6 +84,11 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     alert('登录成功');
+                    let parmes = {
+                        username:this.loginform.username,
+                        pwd:this.loginform.pwd
+                    };
+                    this.$router.push('/');
                 } else {
                     alert('提交登录失败');
                     return false;
