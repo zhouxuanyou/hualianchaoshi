@@ -23,7 +23,17 @@ export default new Router({
       {
           path:'/',
           name:'Index',
-          component:Index
+          component:Index,
+          children:[
+              {path:'',name:'Home',component:()=>import('./views/Home/Home.vue')},
+              {path:'/accountmanage',name:'Accountmanage',component:()=>import('./views/Accountmanage/Accountmanage')},
+              {path:'/goodsmanage',name:'Goodsmanage',component:()=>import('./views/Goodsmanage/Goodsmanage')},
+              {path:'/salestatistics',name:'Salestatistics',component:()=>import('./views/Salestatistics/Salestatistics.vue')},
+              {path:'/kucunguanli',name:'Jinhuo',component:()=>import('./views/Jinhuo/Jinhuo.vue')},
+              {path:'/goodslist',name:'goodslist',component:()=>import('./views/Chuhuoguanli/Chuhuoguanli.vue')},
+              {path:'/zhanghguanli',name:'Huiyuan',component:()=>import('./views/Huiyuanguanli/Huiyuanguanli.vue')},
+              {path:'/fenleiguanli',name:'Fenlei',component:()=>import('./views/Fenleiguanli/Fenleiguanli.vue')},
+          ]
       }
   ]
 })
