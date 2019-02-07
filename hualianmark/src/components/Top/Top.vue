@@ -37,7 +37,7 @@
 export default {
     data () {
         return {
-            username: "李寻欢",
+            username: '华仔',
             avatarUrl: 'http://127.0.0.1:8080/3TLl_97HNJo.jpg'
         }
     }
