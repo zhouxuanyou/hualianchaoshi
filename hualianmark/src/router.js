@@ -26,7 +26,8 @@ export default new Router({
           component:Index,
           children:[
               {path:'',name:'Home',component:()=>import('./views/Home/Home.vue')},
-              {path:'/accountmanage',name:'Accountmanage',component:()=>import('./views/Accountmanage/Accountmanage')},
+              {path:'/accountmanage',name:'Accountmanage',component:()=>import('./views/Accountmanage/Accountmanage.vue')},
+              {path:'/accountadd',name:'AccountAdd',component:()=>import('./views/Accountmanage/AccountAdd.vue')},
               {path:'/goodsmanage',name:'Goodsmanage',component:()=>import('./views/Goodsmanage/Goodsmanage')},
               {path:'/salestatistics',name:'Salestatistics',component:()=>import('./views/Salestatistics/Salestatistics.vue')},
               {path:'/kucunguanli',name:'Jinhuo',component:()=>import('./views/Jinhuo/Jinhuo.vue')},
