@@ -99,7 +99,6 @@
                 this.$refs[formName].validate(valid => {
                     // 如果所有验证通过 valid就是true
                     if (valid) {
-                        alert("前端验证通过 可以提交给后端！");
 
                         // 收集用户输入的所有账号数据
                         let params = {

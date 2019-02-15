@@ -46,13 +46,13 @@
                             <el-button
                                     type="primary"
                                     size="mini"
-                                    @click="handleEdit(scope.$index, scope.row)">
+                                    @click="handleEdit(scope.row.id)">
                                 <i class="el-icon-edit"></i> 编辑
                             </el-button>
                             <el-button
                                     size="mini"
                                     type="danger"
-                                    @click="handleDelete(scope.$index, scope.row)">
+                                    @click="handleDelete(scope.row.id)">
                                 <i class="el-icon-delete"></i>  删除
                             </el-button>
                         </template>
@@ -97,7 +97,39 @@
                 this.multiplication = val;
             },
             handleEdit() {},
-            handleDelete() {}
+            //删除账号
+            handleDelete(id) {
+                this.$confirm('你确定要删除吗？','提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
+                    .then(()=>{
+                        this.axios.get(`http://127.0.0.1:888/account/accountdel?id=${id}`)
+                            .then(response=>{
+                                // 接收后端返回的错误码 和 提示信息
+                                let { error_code, reason } = response.data;
+                                // 判断
+                                if (error_code === 0) {
+                                    // 弹出删除成功的提示
+                                    this.$message({
+                                        type: "success",
+                                        message: reason
+                                    });
+                                    // 输出列表（再次调用请求所有用户账号的函数 由于之前已经删除了 所以再次请求 得到的是删除后的数据）
+                                    this.getaccountelist();
+                                } else {
+                                    // 弹出删除失败的提示
+                                    this.$message.error(reason);
+                                }
+
+                            })
+                            .catch(err=>{
+                                console.log(err)
+                            })
+
+                    })
+            }
         },
         filters:{
             filterctime(ctime){

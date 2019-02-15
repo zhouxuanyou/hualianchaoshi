@@ -45,4 +45,25 @@ router.get('/accountlist',(req,res)=>{
     })
 });
 
+//删除账号
+router.get('/accountdel',(req,res)=>{
+    // 接收id
+    let { id } = req.query;
+    // 根据id 执行删除
+    // 构造删除数据的sql语句
+    const sqlstr = `delete from account where id = ${id}`;
+    // 执行sql语句
+    connection.query(sqlstr, (err, data) => {
+        if (err) throw err;
+        // 根据删除结果判断
+        if (data.affectedRows > 0) {
+            // 如果受影响行数大于0 删除成功 返回成功的数据对象给前端
+            res.send({"error_code": 0, "reason":"删除数据成功"});
+        } else {
+            // 否则删除失败 返回失败的数据对象给前端
+            res.send({"error_code": 1, "reason":"删除数据失败"});
+        }
+    })
+});
+
 module.exports = router;
