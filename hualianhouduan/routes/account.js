@@ -11,6 +11,7 @@ router.all('*', (req, res, next) => {
     next();
 });
 
+//添加账号
 router.post('/accountadd',(req,res)=>{
 
     //接收前端发送过来的数据
@@ -31,7 +32,17 @@ router.post('/accountadd',(req,res)=>{
            res.send({"error_code": 1, "reason":"插入数据失败"});
        }
     });
+});
 
+//显示账号数据
+router.get('/accountlist',(req,res)=>{
+    //设置sql语句
+    let sqlstr = 'select * from account order by ctime desc';
+    //执行sql
+    connection.query(sqlstr,(err,data)=>{
+        if (err) throw err;
+        res.send(data);
+    })
 });
 
 module.exports = router;

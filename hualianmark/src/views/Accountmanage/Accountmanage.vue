@@ -37,7 +37,7 @@
                     <el-table-column
                             label="创建日期"
                     >
-                        <template slot-scope="scope">{{ scope.row.cdate }}</template>
+                        <template slot-scope="scope">{{ scope.row.ctime | filterctime}}</template>
                     </el-table-column>
 
                     <!-- 操作 -->
@@ -66,50 +66,44 @@
 </template>
 
 <script>
+    import moment from 'moment';
+    import qs from 'qs';
     export default {
         name: "Accountmanage",
         data() {
             return {
                 tableData: [
-                    {
-                        username: "李寻欢",
-                        usergroup: "超级管理员",
-                        cdate: "2019-01-30"
-                    },
-                    {
-                        username: "admin",
-                        usergroup: "普通用户",
-                        cdate: "2019-01-30"
-                    },
-                    {
-                        username: "赵子龙",
-                        usergroup: "超级管理员",
-                        cdate: "2019-01-30"
-                    },
-                    {
-                        username: "guest",
-                        usergroup: "普通用户",
-                        cdate: "2019-01-30"
-                    },
-                    {
-                        username: "guest",
-                        usergroup: "普通用户",
-                        cdate: "2019-01-30"
-                    },
-                    {
-                        username: "guest",
-                        usergroup: "普通用户",
-                        cdate: "2019-01-30"
-                    }
                 ]
             };
         },
+        // 生命周期的钩子函数 created 自动触发 vue组件实例对象创建完成 dom还没有绑定 这个函数里面适合发送ajax请求 获取数据
+        created() {
+            // 自动发送请求 获取所有用户账号数据
+            this.getaccountelist();
+        },
         methods: {
+            //设置获取账号数据
+            getaccountelist(){
+                this.axios.get('http://127.0.0.1:888/account/accountlist')
+                    .then(response=>{
+
+                        this.tableData = response.data
+                    })
+                    .catch(err=>{
+                        console.log(err)
+                    })
+            },
             handleSelectionChange(val) {
                 this.multiplication = val;
             },
             handleEdit() {},
             handleDelete() {}
+        },
+        filters:{
+            filterctime(ctime){
+                return moment(ctime).format("YYYY/MM/DD HH:mm:ss");
+
+            }
         }
     }
 </script>
