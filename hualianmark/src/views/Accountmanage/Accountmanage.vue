@@ -59,6 +59,30 @@
                     </el-table-column>
 
                 </el-table>
+                <!-- 修改的弹出模态框 -->
+                <el-dialog title="账号修改" width="400px" :visible.sync="flag">
+                    <!-- 回填表单 -->
+                    <el-form :model="editForm"  label-width="60px">
+                        <!-- 账号 -->
+                        <el-form-item label="账号" prop="username">
+                            <el-input style="width: 217px;" type="text" v-model="editForm.username" autocomplete="off"></el-input>
+                        </el-form-item>
+
+                        <!-- 选中用户组 -->
+                        <el-form-item label="用户组" prop="usergroup">
+                            <el-select v-model="editForm.usergroup" placeholder="请选择用户组">
+                                <el-option label="普通用户" value="普通用户"></el-option>
+                                <el-option label="高级管理员" value="高级管理员"></el-option>
+                            </el-select>
+                        </el-form-item>
+
+                    </el-form>
+                    <!-- 表单的尾部 -->
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="flag = false">取 消</el-button>
+                        <el-button type="primary" @click="saveedit">确 定</el-button>
+                    </div>
+                </el-dialog>
             </div>
         </el-card>
 
@@ -73,7 +97,14 @@
         data() {
             return {
                 tableData: [
-                ]
+                ],
+                flag: false,
+                // 修改表单数据
+                editForm: {
+                    username: "",
+                    usergroup: ""
+                },
+                editId: "" // 要修改的数据的id
             };
         },
         // 生命周期的钩子函数 created 自动触发 vue组件实例对象创建完成 dom还没有绑定 这个函数里面适合发送ajax请求 获取数据
@@ -96,7 +127,20 @@
             handleSelectionChange(val) {
                 this.multiplication = val;
             },
-            handleEdit() {},
+            handleEdit(id) {
+                //保存当前id
+                this.editid = id;
+                this.flag = true;
+                this.axios.get(`http://127.0.0.1:888/account/accountedit?id=${id}`)
+                    .then(response=>{
+                        let res = response.data[0];
+                        this.editForm.username = res.username;
+                        this.editForm.usergroup = res.usergroup;
+                    })
+                    .catch(err=>{
+                        console.log(err);
+                    })
+            },
             //删除账号
             handleDelete(id) {
                 this.$confirm('你确定要删除吗？','提示', {
@@ -128,6 +172,31 @@
                                 console.log(err)
                             })
 
+                    })
+            },
+            saveedit(){
+                //保存当前的数据
+                let params = {
+                    username: this.editForm.username,
+                    usergroup: this.editForm.usergroup,
+                    editid: this.editid
+                };
+                this.axios.post('http://127.0.0.1:888/account/accountsaveeidt',qs.stringify( params ))
+                    .then(response=>{
+                        let {err_code,reason} = response.data;
+                        if (err_code === 0 ){
+                            this.$message({
+                                type: "success",
+                                message: reason
+                            });
+                            this.getaccountelist();
+                        } else {
+                            this.$message.error(reason);
+                            this.flag = false;
+                        }
+                    })
+                    .catch(err=>{
+                        console.log(err);
                     })
             }
         },

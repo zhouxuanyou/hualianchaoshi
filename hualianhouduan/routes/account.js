@@ -66,4 +66,33 @@ router.get('/accountdel',(req,res)=>{
     })
 });
 
+//修改账号回填
+router.get('/accountedit',(req,res)=>{
+    let {id} = req.query;
+    //设置sql
+    let sqlstr = `select * from account where id = ${id}`;
+    connection.query(sqlstr,(err,data)=>{
+        if (err) throw err;
+        res.send(data);
+    })
+});
+
+//设置保存修改
+router.post('/accountsaveeidt',(req,res)=>{
+    let {username,usergroup,editid} = req.body;
+    //设置sql
+    let sqlstr = `update account set username='${username}', usergroup='${usergroup}' where id=${editid}`;
+    connection.query(sqlstr,(err,data)=>{
+        if (err) throw err;
+        if (data.affectedRows > 0) {
+            // 返回成功的数据对象给前端
+            res.send({"error_code": 0, "reason":"修改账号成功"});
+        } else {
+            // 返回失败的数据对象给前端
+            res.send({"error_code": 1, "reason":"修改账号失败"});
+        }
+
+    })
+});
+
 module.exports = router;
