@@ -95,4 +95,24 @@ router.post('/accountsaveeidt',(req,res)=>{
     })
 });
 
+//批删
+router.get('/batchdelete',(req,res)=>{
+    //接收前端发送过来的数据
+    let {selectedId} = req.query;
+    // console.log(selectedId);
+    //构造sql语句
+    let sqlstr = `delete from account where id in (${selectedId})`;
+
+    // console.log(sqlstr);
+    connection.query(sqlstr,(err,data)=>{
+        if (err) throw err;
+        if (data.affectedRows > 0) {
+            res.send({"error_code": 0, "reason":"批量删除成功"})
+        } else {
+            res.send({"error_code": 1, "reason":"批量删除失败"})
+        }
+    })
+
+});
+
 module.exports = router;

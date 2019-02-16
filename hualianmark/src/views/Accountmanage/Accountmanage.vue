@@ -59,13 +59,17 @@
                     </el-table-column>
 
                 </el-table>
+                <div style="margin-top: 20px; text-align:left">
+                    <el-button @click="batchDelete">批量删除</el-button>
+                    <el-button @click="cancelSelect()">取消选择</el-button>
+                </div>
                 <!-- 修改的弹出模态框 -->
                 <el-dialog title="账号修改" width="400px" :visible.sync="flag">
                     <!-- 回填表单 -->
-                    <el-form :model="editForm"  label-width="60px">
+                    <el-form :model="editForm" :rules="rules" ref="editForm" label-width="70px">
                         <!-- 账号 -->
                         <el-form-item label="账号" prop="username">
-                            <el-input style="width: 217px;" type="text" v-model="editForm.username" autocomplete="off"></el-input>
+                            <el-input style="width: 194px;" type="text" v-model="editForm.username" autocomplete="off"></el-input>
                         </el-form-item>
 
                         <!-- 选中用户组 -->
@@ -80,7 +84,7 @@
                     <!-- 表单的尾部 -->
                     <div slot="footer" class="dialog-footer">
                         <el-button @click="flag = false">取 消</el-button>
-                        <el-button type="primary" @click="saveedit">确 定</el-button>
+                        <el-button type="primary" @click="saveedit('editForm')">确 定</el-button>
                     </div>
                 </el-dialog>
             </div>
@@ -104,7 +108,20 @@
                     username: "",
                     usergroup: ""
                 },
-                editId: "" // 要修改的数据的id
+                // 验证规则
+                rules: {
+                    // 账号
+                    username: [
+                        { required: true, message: "请输入账号", trigger: "blur" },
+                        { min: 2, max: 6, message: "长度在 2 - 6 位", trigger: "blur" }
+                    ],
+                    // 用户组
+                    usergroup: [
+                        { required: true, message: '请选择用户组', trigger: 'change' }
+                    ]
+                },
+                editId: "", // 要修改的数据的id
+                selectedAccount: [], // 被选中的账号数据
             };
         },
         // 生命周期的钩子函数 created 自动触发 vue组件实例对象创建完成 dom还没有绑定 这个函数里面适合发送ajax请求 获取数据
@@ -125,17 +142,18 @@
                     })
             },
             handleSelectionChange(val) {
-                this.multiplication = val;
+                this.selectedAccount = val;
             },
             handleEdit(id) {
                 //保存当前id
                 this.editid = id;
-                this.flag = true;
+
                 this.axios.get(`http://127.0.0.1:888/account/accountedit?id=${id}`)
                     .then(response=>{
                         let res = response.data[0];
                         this.editForm.username = res.username;
                         this.editForm.usergroup = res.usergroup;
+                        this.flag = true;
                     })
                     .catch(err=>{
                         console.log(err);
@@ -174,31 +192,92 @@
 
                     })
             },
-            saveedit(){
-                //保存当前的数据
-                let params = {
-                    username: this.editForm.username,
-                    usergroup: this.editForm.usergroup,
-                    editid: this.editid
-                };
-                this.axios.post('http://127.0.0.1:888/account/accountsaveeidt',qs.stringify( params ))
-                    .then(response=>{
-                        let {err_code,reason} = response.data;
-                        if (err_code === 0 ){
-                            this.$message({
-                                type: "success",
-                                message: reason
+            saveedit(formName){
+                this.$refs[formName].validate(valid=>{
+                    if (valid){
+                        //保存当前的数据
+                        let params = {
+                            username: this.editForm.username,
+                            usergroup: this.editForm.usergroup,
+                            editid: this.editid
+                        };
+
+                        this.axios.post('http://127.0.0.1:888/account/accountsaveeidt',qs.stringify( params ))
+                            .then(response=>{
+                                let {error_code,reason} = response.data;
+                                if (error_code === 0 ){
+                                    this.$message({
+                                        type: "success",
+                                        message: reason
+                                    });
+                                    this.getaccountelist();
+                                } else {
+                                    this.$message.error(reason);
+                                }
+                                this.flag = false;
+                            })
+                            .catch(err=>{
+                                console.log(err);
+                            })
+                    } else {
+                        return false;
+                    }
+                });
+
+            },
+            //批量删除
+            batchDelete() {
+                let selectedId = this.selectedAccount.map(v => v.id);
+                // console.log(selectedId);
+                this.$confirm("你确定要删除吗？", "删除提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                })
+                    .then(()=>{
+                        //把数据发送给后台
+                        this.axios.get(`http://127.0.0.1:888/account/batchdelete`,{
+                            params: {
+                                selectedId
+                            }
+                        })
+                            .then(response => {
+                                // 接收错误码和提示信息
+                                let { error_code, reason } = response.data;
+                                // 判断
+                                if (error_code === 0) {
+                                    // 成功
+                                    // 弹出成功提示
+                                    this.$message({
+                                        type: "success",
+                                        message: reason
+                                    });
+                                    // 刷新列表
+                                    this.getaccountelist();
+                                } else {
+                                    // 失败
+                                    // 弹出失败的提示
+                                    this.$message.error(reason);
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
                             });
-                            this.getaccountelist();
-                        } else {
-                            this.$message.error(reason);
-                            this.flag = false;
-                        }
                     })
-                    .catch(err=>{
-                        console.log(err);
+                    .catch(()=>{
+                        this.$message({
+                            type: "info",
+                            message: "已取消删除"
+                        })
                     })
-            }
+
+            },
+            // 取消选中
+            cancelSelect() {
+                this.$refs.multipleTable.clearSelection();
+            },
+
+
         },
         filters:{
             filterctime(ctime){

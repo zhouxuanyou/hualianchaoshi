@@ -93,41 +93,41 @@
                 // 销量排行数据
                 saleData: [
                     {
-                        goodsName: "海飞丝",
+                        goodsName: "南山奶粉",
                         saleCount: 10
                     },
                     {
-                        goodsName: "霸王",
+                        goodsName: "山麓奶粉",
                         saleCount: 80
                     },
                     {
-                        goodsName: "蒂花之秀",
+                        goodsName: "伊利奶粉",
                         saleCount: 50
                     },
                     {
-                        goodsName: "飘柔",
+                        goodsName: "蒙牛奶粉",
                         saleCount: 18
                     },
                     {
-                        goodsName: "飘柔",
+                        goodsName: "Galileo奶粉",
                         saleCount: 18
                     }
                 ],
                 stockoutData: [
                     {
-                        goodsName: "我的优乐美",
+                        goodsName: "深海牡蛎",
                         inventory: 1
                     },
                     {
-                        goodsName: "你的娃哈哈",
+                        goodsName: "澳洲鱼油",
                         inventory: 2
                     },
                     {
-                        goodsName: "它的香飘飘",
+                        goodsName: "印度神油",
                         inventory: 5
                     },
                     {
-                        goodsName: "大家的好迪",
+                        goodsName: "中华伟哥",
                         inventory: 0
                     }
                 ]
