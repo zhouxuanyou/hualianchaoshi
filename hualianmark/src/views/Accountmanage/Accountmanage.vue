@@ -59,6 +59,18 @@
                     </el-table-column>
 
                 </el-table>
+                <!-- 分页 -->
+                <div style="margin-top: 20px;">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-sizes="[1, 3, 5, 10, 20, 50]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="total">
+                    </el-pagination>
+                </div>
                 <div style="margin-top: 20px; text-align:left">
                     <el-button @click="batchDelete">批量删除</el-button>
                     <el-button @click="cancelSelect()">取消选择</el-button>
@@ -122,6 +134,9 @@
                 },
                 editId: "", // 要修改的数据的id
                 selectedAccount: [], // 被选中的账号数据
+                currentPage: 1, // 当前页
+                total: 0, // 数据总条数
+                pageSize: 3 // 每页条数
             };
         },
         // 生命周期的钩子函数 created 自动触发 vue组件实例对象创建完成 dom还没有绑定 这个函数里面适合发送ajax请求 获取数据
@@ -130,16 +145,44 @@
             this.getaccountelist();
         },
         methods: {
-            //设置获取账号数据
+            //设置获取账号数据设置分页
             getaccountelist(){
-                this.axios.get('http://127.0.0.1:888/account/accountlist')
+                //获取当前分页数据
+                let currentPage = this.currentPage;
+                let pageSize = this.pageSize;
+                this.axios.get('http://127.0.0.1:888/account/accountlist',
+                    {
+                        params:{
+                            currentPage,
+                            pageSize
+                        }
+                    }
+                )
                     .then(response=>{
-
-                        this.tableData = response.data
+                        let{data,total} = response.data;
+                        this.total = total;
+                        this.tableData = data;
+                        //判断当前数据存在和是否在第一页
+                        if ( !data.length && this.currentPage !== 1) {
+                            // 页码减去 1
+                            this.currentPage -= 1;
+                            // 再调用自己
+                            this.getaccountelist();
+                        }
                     })
                     .catch(err=>{
                         console.log(err)
                     })
+            },
+            handleSizeChange(val) {
+                // 保存每页显示的条数
+                this.pageSize = val;
+                this.getaccountelist();
+            },
+            handleCurrentChange(val) {
+                // 保存每页显示的条数
+                this.currentPage = val;
+                this.getaccountelist();
             },
             handleSelectionChange(val) {
                 this.selectedAccount = val;

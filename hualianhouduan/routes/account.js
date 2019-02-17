@@ -34,14 +34,30 @@ router.post('/accountadd',(req,res)=>{
     });
 });
 
-//显示账号数据
+//显示账号数据和分页
 router.get('/accountlist',(req,res)=>{
+    //接收传过来的数据
+    let {pageSize,currentPage}=req.query;
+    //设置前置判断当前数据是否为空
+    pageSize = pageSize?pageSize:3;
+    currentPage = currentPage?currentPage:1;
     //设置sql语句
     let sqlstr = 'select * from account order by ctime desc';
     //执行sql
     connection.query(sqlstr,(err,data)=>{
         if (err) throw err;
-        res.send(data);
+        //获取总数据条数
+        let total = data.length;
+        //计算分页条件
+        let n = (currentPage-1)*pageSize;
+        sqlstr += ` limit ${n}, ${pageSize}`;
+        connection.query(sqlstr,(err,data)=>{
+            if (err) throw err;
+            res.send({
+                total,
+                data
+            })
+        })
     })
 });
 
