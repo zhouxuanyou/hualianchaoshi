@@ -92,6 +92,7 @@
 </template>
 
 <script>
+    import qs from 'qs';
     export default {
         name: "GoodsAdd",
         data() {
@@ -211,9 +212,30 @@
                             goodsDesc: this.addGoodsForm.goodsDesc,
                         };
 
-                        this.$router.push("/goodsmanage");
+                        // 发送ajax请求  把数据发送给后端
+                        this.axios
+                            .post(
+                                "http://127.0.0.1:888/goods/addgoods",
+                                qs.stringify(params), // 参数处理
+                            )
+                            .then(response => {
+                                // 如果请求状态码是1 那么就是请求成功
+                                if (response.data.rstCode === 1) {
+                                    // 弹出提示信息
+                                    this.$message({
+                                        type: "success",
+                                        message: response.data.msg
+                                    });
+
+                                    // 跳转到商品管理列表页面
+                                    this.$router.push("/goodsmanage");
+                                } else {
+                                    // 弹出商品添加失败信息
+                                    this.$message.error(response.data.msg);
+                                }
+                            });
                     } else {
-                        alert("前端验证不通过, 不能发送");
+                        console.log("前端验证不通过, 不能发送");
                         return false;
                     }
                 });
