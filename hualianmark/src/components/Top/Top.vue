@@ -12,13 +12,13 @@
                     <el-row>
                         <el-col :span="18">
                             欢迎您! 
-                            <el-dropdown>
+                            <el-dropdown @command="handleconmand">
                             <span class="username el-dropdown-link">
                                 {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>个人中心</el-dropdown-item>
-                                <el-dropdown-item>退出</el-dropdown-item>
+                                <el-dropdown-item command="personal">个人中心</el-dropdown-item>
+                                <el-dropdown-item command="loginout">退出</el-dropdown-item>
                             </el-dropdown-menu>
                             </el-dropdown>
                         </el-col>
@@ -37,10 +37,28 @@
 export default {
     data () {
         return {
-            username: '华仔',
+            username: '',
             avatarUrl: 'http://127.0.0.1:8080/3TLl_97HNJo.jpg'
         }
+    },
+    methods:{
+        handleconmand(command){
+            if (command === 'loginout'){
+                window.localStorage.removeItem('token');
+                this.$message({
+                   type:"success",
+                   message:"退出成功"
+                });
+                this.$router.push('/login')
+            }else {
+                this.$message.error('退出失败');
+            }
+        }
+    },
+    created(){
+        this.username = window.localStorage.getItem('username');
     }
+
 }
 </script>
 <style lang="less">

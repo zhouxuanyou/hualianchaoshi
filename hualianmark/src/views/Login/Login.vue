@@ -31,7 +31,7 @@
 
 <script>
 
-
+import qs from 'qs';
 
 export default {
     data() {
@@ -83,14 +83,30 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('登录成功');
                     let parmes = {
                         username:this.loginform.username,
                         pwd:this.loginform.pwd
                     };
-                    this.$router.push('/');
+                    this.axios.post('http://127.0.0.1:888/account/login',qs.stringify(parmes))
+                        .then(response=>{
+                            let{error_code,reason,token,username}=response.data;
+                            if (error_code === 0 ){
+                                window.localStorage.setItem('token',token);
+                                window.localStorage.setItem('username',username);
+                                this.$message({
+                                    type:"success",
+                                    message:reason
+                                });
+                                this.$router.push('/')
+                            }else {
+                                this.$message.error(reason);
+                            }
+
+                        })
+                        .catch(err=>{
+                            console.log(err);
+                        })
                 } else {
-                    alert('提交登录失败');
                     return false;
                 }
             });
@@ -106,6 +122,7 @@ export default {
 <style lang="less">
     .login{
         background-color: #2d3a4b;
+        background-image: url("http://127.0.0.1:8080/3TLl_97HNJo.jpg");
         height: 100%;
         .login-form{
             width: 600px;

@@ -3,6 +3,8 @@ var router = express.Router();
 
 // 引入连接数据库模块
 const connection = require('./connect');
+const jwt = require('jsonwebtoken');
+const secrekey = 'nihao';
 
 // 统一设置响应头 解决跨域问题
 router.all('*', (req, res, next) => {
@@ -73,6 +75,7 @@ router.get('/accountdel',(req,res)=>{
         if (err) throw err;
         // 根据删除结果判断
         if (data.affectedRows > 0) {
+
             // 如果受影响行数大于0 删除成功 返回成功的数据对象给前端
             res.send({"error_code": 0, "reason":"删除数据成功"});
         } else {
@@ -129,6 +132,25 @@ router.get('/batchdelete',(req,res)=>{
         }
     })
 
+});
+
+//登录模块
+router.post('/login',(req,res)=>{
+   let {username,pwd}=req.body;
+   let sqlstr = `select * from account where username='${username}'and password='${pwd}'`;
+   connection.query(sqlstr,(err,data)=>{
+       if (err) throw err;
+       if (data.length){
+           let obj = data[0];
+           let objs = JSON.stringify(obj);
+           let newobj = JSON.parse(objs);
+           //生成token
+           let token = jwt.sign(newobj,secrekey,{expiresIn: 60 * 60});
+           res.send({"error_code": 0, "reason":"登录成功",token,"username":newobj.username})
+       } else {
+           res.send({"error_code": 1, "reason":"登录失败,请输入正确的用户名密码"})
+       }
+   })
 });
 
 module.exports = router;
