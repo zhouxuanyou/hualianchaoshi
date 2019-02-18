@@ -41,7 +41,7 @@ router.get('/accountlist',(req,res)=>{
     //接收传过来的数据
     let {pageSize,currentPage}=req.query;
     //设置前置判断当前数据是否为空
-    pageSize = pageSize?pageSize:3;
+    pageSize = pageSize?pageSize:5;
     currentPage = currentPage?currentPage:1;
     //设置sql语句
     let sqlstr = 'select * from account order by ctime desc';

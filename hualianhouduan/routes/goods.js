@@ -68,7 +68,58 @@ router.get('/accountlist',(req,res)=>{
     })
 });
 
+//删除账号
+router.get('/goodsdel',(req,res)=>{
+    // 接收id
+    let { id } = req.query;
+    // 根据id 执行删除
+    // 构造删除数据的sql语句
+    const sqlstr = `delete from goods where id = ${id}`;
+    // 执行sql语句
+    connection.query(sqlstr, (err, data) => {
+        if (err) throw err;
+        // 根据删除结果判断
+        if (data.affectedRows > 0) {
 
+            // 如果受影响行数大于0 删除成功 返回成功的数据对象给前端
+            res.send({"error_code": 0, "reason":"删除数据成功"});
+        } else {
+            // 否则删除失败 返回失败的数据对象给前端
+            res.send({"error_code": 1, "reason":"删除数据失败"});
+        }
+    })
+});
+
+//商品数据回填
+router.get('/goodslist',(req,res)=>{
+    let {id} = req.query;
+    // console.log(id);
+    //设置sql
+    let sqlstr = `select * from goods where id = ${id}`;
+    // console.log(sqlstr);
+    // console.log(editId);
+    connection.query(sqlstr,(err,data)=>{
+        if (err) throw err;
+        res.send(data);
+    })
+});
+//修改商品数据回填
+router.get('/addgoodseidtt',(req,res)=>{
+    let {cateName, barCode, goodsName, salePrice, marketPrice, costPrice, goodsNum, goodsWeight, unit, discount, promotion, goodsDesc,id} = req.body;
+    //设置sql
+    let sqlstr = `update account set cateName='${cateName}', barCode='${barCode}',goodsName='${goodsName}',salePrice='${salePrice}',marketPrice='${marketPrice}',costPrice='${costPrice}',goodsNum='${goodsNum}',goodsWeight='${goodsWeight}',unit='${unit}',discount='${discount}',promotion='${promotion}', goodsDesc='${goodsDesc}' where id=${id}`;
+    connection.query(sqlstr,(err,data)=>{
+        if (err) throw err;
+        if (data.affectedRows > 0) {
+            // 返回成功的数据对象给前端
+            res.send({"error_code": 0, "reason":"修改账号成功"});
+        } else {
+            // 返回失败的数据对象给前端
+            res.send({"error_code": 1, "reason":"修改账号失败"});
+        }
+
+    })
+});
 
 
 module.exports = router;

@@ -136,7 +136,7 @@
                 selectedAccount: [], // 被选中的账号数据
                 currentPage: 1, // 当前页
                 total: 0, // 数据总条数
-                pageSize: 3 // 每页条数
+                pageSize: 5 // 每页条数
             };
         },
         // 生命周期的钩子函数 created 自动触发 vue组件实例对象创建完成 dom还没有绑定 这个函数里面适合发送ajax请求 获取数据

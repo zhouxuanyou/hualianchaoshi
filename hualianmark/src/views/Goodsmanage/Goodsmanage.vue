@@ -1,8 +1,28 @@
 <template>
-    <div class="account-manage">
+    <div class="goodsmanage">
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>商品管理</span>
+            </div>
+            <div>
+                <el-form :inline="true" :model="searchForm" class="demo-form-inline" style="text-align: left">
+                    <el-form-item label="所属分类">
+                        <el-select v-model="searchForm.cateName" placeholder="所属分类">
+                            <el-option label="全部" value="全部"></el-option>
+                            <el-option label="酒水类" value="酒水类"></el-option>
+                            <el-option label="水果类" value="水果类"></el-option>
+                            <el-option label="电子类" value="电子类"></el-option>
+                            <el-option label="食品类" value="食品类"></el-option>
+                            <el-option label="生活用品" value="生活用品"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="关键字">
+                        <el-input v-model="searchForm.keyWord" placeholder="商品名称或条形码"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="search">查询</el-button>
+                    </el-form-item>
+                </el-form>
             </div>
             <div class="text item">
                 <!-- 账号管理表格 -->
@@ -114,6 +134,11 @@
         name: "Accountmanage",
         data() {
             return {
+                searchForm: {
+                    // 搜索表单
+                    cateName: "", // 分类名
+                    keyWord: "" // 关键字
+                },
                 tableData: [
                 ],
                 flag: false,
@@ -138,7 +163,7 @@
                 selectedAccount: [], // 被选中的账号数据
                 currentPage: 1, // 当前页
                 total: 0, // 数据总条数
-                pageSize: 3 // 每页条数
+                pageSize: 5 // 每页条数
             };
         },
         // 生命周期的钩子函数 created 自动触发 vue组件实例对象创建完成 dom还没有绑定 这个函数里面适合发送ajax请求 获取数据
@@ -147,6 +172,10 @@
             this.getaccountelist();
         },
         methods: {
+            //查询
+            search(){
+
+            },
             //设置获取账号数据设置分页
             getaccountelist(){
                 //获取当前分页数据
@@ -190,19 +219,14 @@
                 this.selectedAccount = val;
             },
             handleEdit(id) {
-                //保存当前id
-                this.editid = id;
+                // //保存当前id
+                // this.editid = id;
+                // window.localStorage.setItem('goodsid':this.editid);
+                this.$router.push({path:`/goodsedit`,query:{id:id}});
+                // console.log(id);
 
-                this.axios.get(`http://127.0.0.1:888/account/accountedit?id=${id}`)
-                    .then(response=>{
-                        let res = response.data[0];
-                        this.editForm.username = res.username;
-                        this.editForm.usergroup = res.usergroup;
-                        this.flag = true;
-                    })
-                    .catch(err=>{
-                        console.log(err);
-                    })
+
+
             },
             //删除账号
             handleDelete(id) {
@@ -212,7 +236,7 @@
                     type: 'warning'
                 })
                     .then(()=>{
-                        this.axios.get(`http://127.0.0.1:888/account/accountdel?id=${id}`)
+                        this.axios.get(`http://127.0.0.1:888/goods/goodsdel?id=${id}`)
                             .then(response=>{
                                 // 接收后端返回的错误码 和 提示信息
                                 let { error_code, reason } = response.data;
@@ -284,7 +308,7 @@
 </script>
 
 <style lang="less">
-    .account-manage {
+    .goodsmanage {
         .el-card {
             .el-card__header {
                 text-align: left;

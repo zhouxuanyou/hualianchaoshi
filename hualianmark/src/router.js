@@ -31,6 +31,7 @@ export default new Router({
               {path:'/passwordmodify',name:'Passwordmodify',component:()=>import('./views/Accountmanage/Passwordmodify.vue')},
               {path:'/goodsmanage',name:'Goodsmanage',component:()=>import('./views/Goodsmanage/Goodsmanage.vue')},
               {path:'/goodsadd',name:'GoodsAdd',component:()=>import('./views/Goodsmanage/GoodsAdd.vue')},
+              {path:'/goodsedit',name:'GoodsEdit',component:()=>import('./views/Goodsmanage/GoodsEdit.vue')},
               {path:'/salestatistics',name:'Salestatistics',component:()=>import('./views/Salestatistics/Salestatistics.vue')},
               {path:'/kucunguanli',name:'Jinhuo',component:()=>import('./views/Jinhuo/Jinhuo.vue')},
               {path:'/goodslist',name:'goodslist',component:()=>import('./views/Chuhuoguanli/Chuhuoguanli.vue')},

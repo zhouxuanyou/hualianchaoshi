@@ -21,6 +21,7 @@
             <template slot="title"><i class="el-icon-goods"></i>商品管理</template>
             <el-menu-item index="/goodsmanage">商品管理</el-menu-item>
             <el-menu-item index="/goodsadd">添加商品</el-menu-item>
+            <el-menu-item index="/goodsedit">修改商品</el-menu-item>
         </el-submenu>
         <!-- 导航四 -->
         <el-submenu index="4">
