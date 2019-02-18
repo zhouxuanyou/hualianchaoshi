@@ -153,4 +153,35 @@ router.post('/login',(req,res)=>{
    })
 });
 
+
+//检查老密码模块
+router.get('/chekoldpwd',(req,res)=>{
+    let {oldpwd,username} = req.query;
+    let sqlstr = `select * from account where password='${oldpwd}' and username='${username}'`;
+    // console.log(sqlstr);
+    connection.query(sqlstr,(err,data)=>{
+        if (err) throw err;
+        if (data.length){
+            res.send({"error_code":0,"reason":"密码正确"})
+        } else {
+            res.send({"error_code":1,"reason":"旧密码出错"})
+        }
+    })
+});
+
+//保存密码修改
+router.post('/savepwdedit',(req,res)=>{
+    let {oldpwd,password,username} = req.body;
+    let sqlstr = `update account set password='${password}' where password='${oldpwd}' and username='${username}'`;
+    // console.log(sqlstr);
+    connection.query(sqlstr,(err,data)=>{
+        if (err) throw err;
+        if (data.affectedRows > 0){
+            res.send({"error_code":0,"reason":"密码修改成功"})
+        } else {
+            res.send({"error_code":1,"reason":"密码修改失败"})
+        }
+    })
+});
+
 module.exports = router;
