@@ -103,7 +103,7 @@ router.get('/goodslist',(req,res)=>{
         res.send(data);
     })
 });
-//修改商品数据回填
+//修改商品数据保存
 router.get('/addgoodseidtt',(req,res)=>{
     let {cateName, barCode, goodsName, salePrice, marketPrice, costPrice, goodsNum, goodsWeight, unit, discount, promotion, goodsDesc,id} = req.body;
     //设置sql
