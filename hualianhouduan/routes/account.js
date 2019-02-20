@@ -164,7 +164,7 @@ router.post('/login',(req,res)=>{
            let objs = JSON.stringify(obj);
            let newobj = JSON.parse(objs);
            //生成token
-           let token = jwt.sign(newobj,secrekey,{expiresIn: 60 * 60});
+           let token = jwt.sign(newobj,secrekey,{expiresIn: 60 * 60*24*30});
            res.send({"error_code": 0, "reason":"登录成功",token,"username":newobj.username})
        } else {
            res.send({"error_code": 1, "reason":"登录失败,请输入正确的用户名密码"})

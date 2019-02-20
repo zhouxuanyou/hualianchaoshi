@@ -204,7 +204,7 @@
 
                 this.req.get(`/goods/goodslist`,{id})
                     .then(response=>{
-                        let res = response.data[0];
+                        let res = response[0];
                         console.log(res);
                         this.addGoodsForm.cateName = res.cateName;
                         this.addGoodsForm.barCode = res.barCode;
