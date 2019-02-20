@@ -173,20 +173,21 @@
         methods: {
             //查询
             search(){
-
+                this.getaccountelist();
             },
             //设置获取账号数据设置分页
             getaccountelist(){
                 //获取当前分页数据
-                let currentPage = this.currentPage;
-                let pageSize = this.pageSize;
+                let params = {
+                    pageSize: this.pageSize, // 每页条数
+                    currentPage: this.currentPage, // 当前页码
+                    cateName: this.searchForm.cateName, // 查询分类名
+                    keyWord: this.searchForm.keyWord // 查询关键字
+                };
                 this.req.get('/goods/accountlist',
-                    {
-                        params:{
-                            currentPage,
-                            pageSize
-                        }
-                    }
+
+                        params
+
                 )
                     .then(response=>{
                         let{data,total} = response;

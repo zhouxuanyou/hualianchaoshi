@@ -68,7 +68,7 @@ export default {
             loginrules: {
                 username: [
                     { required: true, message: "请输入账号", trigger: "blur" },
-                    { min: 3, max: 6, message: "账号长度在 3 - 6 位", trigger: "blur" }
+                    { min: 2, max: 6, message: "账号长度在 2 - 6 位", trigger: "blur" }
                 ],
                 pwd: [
                     { required: true, validator: pass, trigger: "blur" }

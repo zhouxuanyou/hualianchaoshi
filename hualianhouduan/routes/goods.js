@@ -1,11 +1,30 @@
 var express = require('express');
 var router = express.Router();
+// 引入express-jwt 用于验证token
+const expressJwt = require('express-jwt');
+// 引入jwt
+const jwt = require('jsonwebtoken');
+const secrekey = 'nihao';
 
 // 统一设置响应头 解决跨域问题
 router.all('*', (req, res, next) => {
     // 设置响应头 解决跨域(目前最主流的方式)
     res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Headers", "authorization");
     next();
+});
+// 使用模块 express-jwt 验证token
+router.use(expressJwt ({
+    secret:  secrekey
+}));
+
+//拦截器
+router.use( (err, req, res, next) => {
+    //当token验证失败时会抛出如下错误
+    if (err.name === 'UnauthorizedError') {
+        //这个需要根据自己的业务逻辑来处理
+        res.status(401).send('无效的token 未授权...');
+    }
 });
 
 
@@ -44,17 +63,34 @@ router.post('/addgoods', (req, res) => {
 //显示账号数据和分页
 router.get('/accountlist',(req,res)=>{
     //接收传过来的数据
-    let {pageSize,currentPage}=req.query;
+    let {pageSize,currentPage,cateName, keyWord}=req.query;
     //设置前置判断当前数据是否为空
     pageSize = pageSize?pageSize:3;
     currentPage = currentPage?currentPage:1;
     //设置sql语句
-    let sqlstr = 'select * from goods order by ctime desc';
+    let sqlstr = 'select * from goods where 1 = 1';
     //执行sql
     connection.query(sqlstr,(err,data)=>{
         if (err) throw err;
         //获取总数据条数
         let total = data.length;
+        // 分类名不为空 且 全部 那么 就拼接分类条件
+        if (cateName !== "" && cateName !== "全部") {
+            sqlstr += ` and cateName='${cateName}'`;
+        }
+
+        // 如果关键字不为空 就要拼接关键字查询条件
+        if (keyWord !== "") {
+            sqlstr += ` and (goodsName like "%${keyWord}%" or barCode like "%${keyWord}%")`
+        }
+        // 再次按照 查询的条件查询数据 重新计算数据的总条数
+        connection.query(sqlstr, (err, data) => {
+            if (err) throw err;
+            total = data.length;
+        });
+
+        // 拼接排序
+        sqlstr += ` order by ctime desc`;
         //计算分页条件
         let n = (currentPage-1)*pageSize;
         sqlstr += ` limit ${n}, ${pageSize}`;

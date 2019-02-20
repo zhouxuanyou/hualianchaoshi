@@ -63,11 +63,11 @@
             const oldpass = (rule,value,callback)=>{
                 let username = window.localStorage.getItem('username');
                 this.req.get(`/account/chekoldpwd`,{
-                    odlpwd:value,
+                    oldpwd:value,
                     username
                 })
                     .then(response=>{
-                        let {error_code,reason} = response.data;
+                        let {error_code,reason} = response;
                         if (error_code === 0 ){
                             callback();
                         } else {
@@ -122,7 +122,7 @@
                         this.req.post('/account/savepwdedit',params)
                             .then(response=>{
                                 // 接收后端返回的错误码 和 提示信息
-                                let { error_code,  reason } = response;
+                                let { error_code, reason } = response;
                                 if (error_code === 0){
                                     this.$message({
                                         type: 'success',
