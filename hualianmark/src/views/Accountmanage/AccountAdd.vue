@@ -110,10 +110,10 @@
                         // //   console.log(params)
                         // // 跳转到账号管理页面
                         // this.$router.push('/accountmanage')
-                        this.axios.post('http://127.0.0.1:888/account/accountadd',qs.stringify(params))
+                        this.req.post('account/accountadd',params)
                             .then(response=>{
                                 // 接收后端返回的错误码 和 提示信息
-                                let { error_code,  reason } = response.data;
+                                let { error_code,  reason } = response;
                                 if (error_code === 0){
                                     this.$message({
                                         type: 'success',

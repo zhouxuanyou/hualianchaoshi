@@ -129,7 +129,6 @@
 
 <script>
     import moment from 'moment';
-    import qs from 'qs';
     export default {
         name: "Accountmanage",
         data() {
@@ -181,7 +180,7 @@
                 //获取当前分页数据
                 let currentPage = this.currentPage;
                 let pageSize = this.pageSize;
-                this.axios.get('http://127.0.0.1:888/goods/accountlist',
+                this.req.get('/goods/accountlist',
                     {
                         params:{
                             currentPage,
@@ -190,7 +189,7 @@
                     }
                 )
                     .then(response=>{
-                        let{data,total} = response.data;
+                        let{data,total} = response;
                         this.total = total;
                         this.tableData = data;
                         //判断当前数据存在和是否在第一页
@@ -236,10 +235,10 @@
                     type: 'warning'
                 })
                     .then(()=>{
-                        this.axios.get(`http://127.0.0.1:888/goods/goodsdel?id=${id}`)
+                        this.req.get(`/goods/goodsdel`,{id})
                             .then(response=>{
                                 // 接收后端返回的错误码 和 提示信息
-                                let { error_code, reason } = response.data;
+                                let { error_code, reason } = response;
                                 // 判断
                                 if (error_code === 0) {
                                     // 弹出删除成功的提示
@@ -271,9 +270,9 @@
                             editid: this.editid
                         };
 
-                        this.axios.post('http://127.0.0.1:888/account/accountsaveeidt',qs.stringify( params ))
+                        this.req.post('/account/accountsaveeidt',params)
                             .then(response=>{
-                                let {error_code,reason} = response.data;
+                                let {error_code,reason} = response;
                                 if (error_code === 0 ){
                                     this.$message({
                                         type: "success",

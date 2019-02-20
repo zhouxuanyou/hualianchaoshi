@@ -31,7 +31,7 @@
 
 <script>
 
-import qs from 'qs';
+
 
 export default {
     data() {
@@ -87,9 +87,9 @@ export default {
                         username:this.loginform.username,
                         pwd:this.loginform.pwd
                     };
-                    this.axios.post('http://127.0.0.1:888/account/login',qs.stringify(parmes))
+                    this.req.post('/account/login',parmes)
                         .then(response=>{
-                            let{error_code,reason,token,username}=response.data;
+                            let{error_code,reason,token,username}=response;
                             if (error_code === 0 ){
                                 window.localStorage.setItem('token',token);
                                 window.localStorage.setItem('username',username);
