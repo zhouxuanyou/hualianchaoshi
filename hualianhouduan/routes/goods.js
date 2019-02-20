@@ -140,10 +140,11 @@ router.get('/goodslist',(req,res)=>{
     })
 });
 //修改商品数据保存
-router.get('/addgoodseidtt',(req,res)=>{
+router.post('/addgoodseidts',(req,res)=>{
     let {cateName, barCode, goodsName, salePrice, marketPrice, costPrice, goodsNum, goodsWeight, unit, discount, promotion, goodsDesc,id} = req.body;
     //设置sql
-    let sqlstr = `update account set cateName='${cateName}', barCode='${barCode}',goodsName='${goodsName}',salePrice='${salePrice}',marketPrice='${marketPrice}',costPrice='${costPrice}',goodsNum='${goodsNum}',goodsWeight='${goodsWeight}',unit='${unit}',discount='${discount}',promotion='${promotion}', goodsDesc='${goodsDesc}' where id=${id}`;
+    let sqlstr = `update goods set cateName='${cateName}', barCode='${barCode}',goodsName='${goodsName}',salePrice='${salePrice}',marketPrice='${marketPrice}',costPrice='${costPrice}',goodsNum='${goodsNum}',goodsWeight='${goodsWeight}',unit='${unit}',discount='${discount}',promotion='${promotion}', goodsDesc='${goodsDesc}' where id=${id}`;
+    console.log(sqlstr);
     connection.query(sqlstr,(err,data)=>{
         if (err) throw err;
         if (data.affectedRows > 0) {
@@ -155,6 +156,7 @@ router.get('/addgoodseidtt',(req,res)=>{
         }
 
     })
+
 });
 
 

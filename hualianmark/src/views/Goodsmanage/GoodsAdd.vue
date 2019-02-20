@@ -188,8 +188,8 @@
         methods: {
             // 自动填充价格
             autoPrice () {
-                this.addGoodsForm.marketPrice = this.addGoodsForm.costPrice * 3;
-                this.addGoodsForm.salePrice = this.addGoodsForm.costPrice * 2;
+                this.addGoodsForm.marketPrice = this.addGoodsForm.costPrice * 1.8;
+                this.addGoodsForm.salePrice = this.addGoodsForm.costPrice * 1.5;
             },
             // 表单提交触发的函数
             submitForm(formName) {

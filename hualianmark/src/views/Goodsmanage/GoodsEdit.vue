@@ -92,7 +92,7 @@
 </template>
 
 <script>
-    let {editId} = require('./Goodsmanage');
+
     export default {
         name: "GoodsAdd",
         data() {
@@ -226,8 +226,8 @@
             },
             // 自动填充价格
             autoPrice () {
-                this.addGoodsForm.marketPrice = this.addGoodsForm.costPrice * 3;
-                this.addGoodsForm.salePrice = this.addGoodsForm.costPrice * 2;
+                this.addGoodsForm.marketPrice = this.addGoodsForm.costPrice * 1.8;
+                this.addGoodsForm.salePrice = this.addGoodsForm.costPrice * 1.5;
             },
             // 表单提交触发的函数
             submitForm(formName) {
@@ -258,24 +258,21 @@
 
                         // 发送ajax请求  把数据发送给后端
                         this.req
-                            .post(
-                                "/goods/addgoodseidt",
-                                qs.stringify(params), // 参数处理
-                            )
+                            .post("/goods/addgoodseidts", params)
                             .then(response => {
                                 // 如果请求状态码是1 那么就是请求成功
-                                if (response.rstCode === 1) {
+                                if (response.error_code === 0) {
                                     // 弹出提示信息
                                     this.$message({
                                         type: "success",
-                                        message: response.msg
+                                        message: response.reason
                                     });
 
                                     // 跳转到商品管理列表页面
                                     this.$router.push("/goodsmanage");
                                 } else {
                                     // 弹出商品添加失败信息
-                                    this.$message.error(response.msg);
+                                    this.$message.error(response.reason);
                                 }
                             });
                     } else {

@@ -97,30 +97,30 @@
                             :total="total">
                     </el-pagination>
                 </div>
-                <!-- 修改的弹出模态框 -->
-                <el-dialog title="账号修改" width="400px" :visible.sync="flag">
-                    <!-- 回填表单 -->
-                    <el-form :model="editForm" :rules="rules" ref="editForm" label-width="70px">
-                        <!-- 账号 -->
-                        <el-form-item label="账号" prop="username">
-                            <el-input style="width: 194px;" type="text" v-model="editForm.username" autocomplete="off"></el-input>
-                        </el-form-item>
+                <!--&lt;!&ndash; 修改的弹出模态框 &ndash;&gt;-->
+                <!--<el-dialog title="账号修改" width="400px" :visible.sync="flag">-->
+                    <!--&lt;!&ndash; 回填表单 &ndash;&gt;-->
+                    <!--<el-form :model="editForm" :rules="rules" ref="editForm" label-width="70px">-->
+                        <!--&lt;!&ndash; 账号 &ndash;&gt;-->
+                        <!--<el-form-item label="账号" prop="username">-->
+                            <!--<el-input style="width: 194px;" type="text" v-model="editForm.username" autocomplete="off"></el-input>-->
+                        <!--</el-form-item>-->
 
-                        <!-- 选中用户组 -->
-                        <el-form-item label="用户组" prop="usergroup">
-                            <el-select v-model="editForm.usergroup" placeholder="请选择用户组">
-                                <el-option label="普通用户" value="普通用户"></el-option>
-                                <el-option label="高级管理员" value="高级管理员"></el-option>
-                            </el-select>
-                        </el-form-item>
+                        <!--&lt;!&ndash; 选中用户组 &ndash;&gt;-->
+                        <!--<el-form-item label="用户组" prop="usergroup">-->
+                            <!--<el-select v-model="editForm.usergroup" placeholder="请选择用户组">-->
+                                <!--<el-option label="普通用户" value="普通用户"></el-option>-->
+                                <!--<el-option label="高级管理员" value="高级管理员"></el-option>-->
+                            <!--</el-select>-->
+                        <!--</el-form-item>-->
 
-                    </el-form>
-                    <!-- 表单的尾部 -->
-                    <div slot="footer" class="dialog-footer">
-                        <el-button @click="flag = false">取 消</el-button>
-                        <el-button type="primary" @click="saveedit('editForm')">确 定</el-button>
-                    </div>
-                </el-dialog>
+                    <!--</el-form>-->
+                    <!--&lt;!&ndash; 表单的尾部 &ndash;&gt;-->
+                    <!--<div slot="footer" class="dialog-footer">-->
+                        <!--<el-button @click="flag = false">取 消</el-button>-->
+                        <!--<el-button type="primary" @click="saveedit('editForm')">确 定</el-button>-->
+                    <!--</div>-->
+                <!--</el-dialog>-->
             </div>
         </el-card>
 
@@ -261,39 +261,39 @@
 
                     })
             },
-            saveedit(formName){
-                this.$refs[formName].validate(valid=>{
-                    if (valid){
-                        //保存当前的数据
-                        let params = {
-                            username: this.editForm.username,
-                            usergroup: this.editForm.usergroup,
-                            editid: this.editid
-                        };
-
-                        this.req.post('/account/accountsaveeidt',params)
-                            .then(response=>{
-                                let {error_code,reason} = response;
-                                if (error_code === 0 ){
-                                    this.$message({
-                                        type: "success",
-                                        message: reason
-                                    });
-                                    this.getaccountelist();
-                                } else {
-                                    this.$message.error(reason);
-                                }
-                                this.flag = false;
-                            })
-                            .catch(err=>{
-                                console.log(err);
-                            })
-                    } else {
-                        return false;
-                    }
-                });
-
-            },
+            // saveedit(formName){
+            //     this.$refs[formName].validate(valid=>{
+            //         if (valid){
+            //             //保存当前的数据
+            //             let params = {
+            //                 username: this.editForm.username,
+            //                 usergroup: this.editForm.usergroup,
+            //                 editid: this.editid
+            //             };
+            //
+            //             this.req.post('/account/accountsaveeidt',params)
+            //                 .then(response=>{
+            //                     let {error_code,reason} = response;
+            //                     if (error_code === 0 ){
+            //                         this.$message({
+            //                             type: "success",
+            //                             message: reason
+            //                         });
+            //                         this.getaccountelist();
+            //                     } else {
+            //                         this.$message.error(reason);
+            //                     }
+            //                     this.flag = false;
+            //                 })
+            //                 .catch(err=>{
+            //                     console.log(err);
+            //                 })
+            //         } else {
+            //             return false;
+            //         }
+            //     });
+            //
+            // },
 
 
 
